@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Product</string>
+    <string name="no_internet">Please check your network connections</string>
+</resources>
