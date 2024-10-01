@@ -5,10 +5,10 @@ import aaa.android.product.data.model.Item
 import aaa.android.product.data.model.ProductItemItem
 import aaa.android.product.data.viewmodel.ProductViewModel
 import aaa.android.product.ui.theme.AndroidProductTheme
-import aaa.android.product.utils.Util.isNetworkAvailable
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -48,12 +48,11 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -82,6 +81,7 @@ class MainActivity : ComponentActivity() {
                     ConnectivityObserver.Status.Unavailable, ConnectivityObserver.Status.Losing,
                     ConnectivityObserver.Status.Lost -> {
                         NoInternetConnectionView()
+                      
                     }
                 }
 
@@ -304,17 +304,17 @@ class NetworkConnectivityObserver(
     override fun observe(): Flow<ConnectivityObserver.Status> {
         return callbackFlow {
             val callback = object : ConnectivityManager.NetworkCallback() {
-                override fun onAvailable(network: android.net.Network) {
+                override fun onAvailable(network: Network) {
                     super.onAvailable(network)
                     launch { trySend(ConnectivityObserver.Status.Available) }
                 }
 
-                override fun onLosing(network: android.net.Network, maxMsToLive: Int) {
+                override fun onLosing(network: Network, maxMsToLive: Int) {
                     super.onLosing(network, maxMsToLive)
                     launch { trySend(ConnectivityObserver.Status.Losing) }
                 }
 
-                override fun onLost(network: android.net.Network) {
+                override fun onLost(network: Network) {
                     super.onLost(network)
                     launch { trySend(ConnectivityObserver.Status.Lost) }
                 }
@@ -356,5 +356,4 @@ interface ConnectivityObserver {
         Lost("No internet connection")
     }
 }
-
 
