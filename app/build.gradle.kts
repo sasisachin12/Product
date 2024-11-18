@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "aaa.android.product"
+    namespace = "aaa.android.sasikumar"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "aaa.android.product"
+        applicationId = "aaa.android.sasikumar"
         minSdk = 33
         targetSdk = 34
         versionCode = 1
