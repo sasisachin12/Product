@@ -30,3 +30,7 @@ steps:
       destination: reports
   - store_test_results:
       path: app/build/test-results
+      workflows:
+        build-and-test:
+          jobs:
+            - test-java
